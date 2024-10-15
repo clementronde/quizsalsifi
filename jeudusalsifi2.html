@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attrape le Salsifi !</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      text-align: center;
+    }
+
+    #salsifi, #salsifi-or {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
+
+    #salsifi-or {
+      display: none;
+      width: 200px;
+      height: 200px;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    h2 {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      color: #4caf50;
+    }
+
+    #timer {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5em;
+      color: #333;
+    }
+
+    #result {
+      position: relative;
+      font-size: 1.5em;
+      color: #333;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 id="title">Attrape le salsifi avant qu'il ne s'échappe !</h2>
+
+  <div id="game-container">
+    <!-- Image du salsifi que l'utilisateur doit cliquer -->
+    <img src="https://www.lagrainedespres.fr/246-large_default/salsifis-blanc.jpg" id="salsifi" alt="Salsifi">
+    
+    <!-- Image du salsifi d'or qui apparaît après avoir cliqué sur le salsifi -->
+    <img src="https://static.vecteezy.com/ti/vecteur-libre/p1/19931483-salsifis-dessin-anime-personnage-style-gratuit-vectoriel.jpg" id="salsifi-or" alt="Salsifi d'or">
+
+    <!-- Compteur en dessous du salsifi d'or -->
+    <div id="timer">Temps : 0,00 secondes</div>
+
+    <!-- Texte du résultat qui apparaîtra sous le compteur -->
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // Sélection des éléments
+    const salsifi = document.getElementById('salsifi');
+    const salsifiOr = document.getElementById('salsifi-or');
+    const gameContainer = document.getElementById('game-container'); // Ajout de cette ligne
+    const timerDisplay = document.getElementById('timer');
+    const resultDisplay = document.getElementById('result');
+    const title = document.getElementById('title');
+
+    let clicks = 0;
+    let startTime;
+    let intervalId;
+
+    // Phase 1 : Fonction pour téléporter le salsifi à un endroit aléatoire
+    function teleportSalsifi() {
+      const containerWidth = gameContainer.offsetWidth;
+      const containerHeight = gameContainer.offsetHeight;
+      
+      const randomX = Math.random() * (containerWidth - salsifi.offsetWidth);
+      const randomY = Math.random() * (containerHeight - salsifi.offsetHeight);
+      
+      salsifi.style.left = `${randomX}px`;
+      salsifi.style.top = `${randomY}px`;
+    }
+
+    // Phase 2 : Démarre le compteur de temps et fait cliquer sur le salsifi d'or
+    function startGoldenSalsifiChallenge() {
+      clicks = 0;
+      title.innerHTML = "Mets le moins de temps à cliquer 30 fois sur le salsifi d'or !";
+
+      // Quand l'utilisateur clique pour la première fois sur le salsifi d'or
+      salsifiOr.addEventListener('click', function onFirstClick() {
+        startTime = Date.now(); // Démarre le chrono au premier clic
+        salsifiOr.removeEventListener('click', onFirstClick); // Supprime cet écouteur après le premier clic
+
+        // Démarre le compteur de temps qui affiche les secondes écoulées toutes les 10 ms
+        intervalId = setInterval(() => {
+          const elapsedTime = (Date.now() - startTime) / 1000; // Temps en secondes
+          timerDisplay.innerHTML = `Temps : ${elapsedTime.toFixed(2)} secondes`;
+        }, 10); // Mettre à jour le temps toutes les 10 millisecondes
+
+        // Continuation des clics sur le salsifi d'or
+        salsifiOr.addEventListener('click', () => {
+          clicks++;
+
+          if (clicks === 30) {
+            clearInterval(intervalId); // Arrête le chrono
+            const finalTime = (Date.now() - startTime) / 1000; // Temps total en secondes
+            resultDisplay.innerHTML = `Bravo ! Vous avez mis ${finalTime.toFixed(2)} secondes pour cliquer 30 fois sur le salsifi d'or !`;
+          }
+        });
+      });
+    }
+
+    // Phase 1 : Quand l'utilisateur clique sur le salsifi normal
+    salsifi.addEventListener('click', () => {
+      clearInterval(teleportInterval); // Arrête la téléportation
+      salsifi.style.display = 'none'; // Cache le salsifi normal
+      salsifiOr.style.display = 'block'; // Affiche le salsifi d'or
+      startGoldenSalsifiChallenge(); // Lance la phase 2
+    });
+
+    // Téléportation automatique toutes les 380 millisecondes pour la phase 1
+    const teleportInterval = setInterval(teleportSalsifi, 380);
+
+    // Initialisation de la première position du salsifi
+    teleportSalsifi();
+  </script>
+
+</body>
+</html>
