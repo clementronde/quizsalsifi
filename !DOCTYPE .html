@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Salsifi</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    h1 {
+      color: #4caf50;
+      font-size: 2em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .quiz-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-left: 4px solid #4caf50;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+
+    .question p {
+      margin: 0 0 10px 0;
+      font-weight: bold;
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    #success-link {
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+
+    #success-link a {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+
+    #success-link a:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz sur le légume visé</h1>
+
+  <div class="quiz-container">
+    <div class="question">
+      <p>1. Quelle est la couleur traditionnelle du salsifi ?</p>
+      <input type="radio" name="q1" value="incorrect"> Violet<br>
+      <input type="radio" name="q1" value="incorrect"> Jaune<br>
+      <input type="radio" name="q1" value="correct"> Blanc<br>
+      <input type="radio" name="q1" value="incorrect"> Noir<br>
+    </div>
+
+    <div class="question">
+      <p>2. Le salsifi est aussi connu sous quel autre nom ?</p>
+      <input type="radio" name="q2" value="correct"> Scorsonère<br>
+      <input type="radio" name="q2" value="incorrect"> Panais<br>
+      <input type="radio" name="q2" value="incorrect"> Topinambour<br>
+      <input type="radio" name="q2" value="incorrect"> Carotte<br>
+    </div>
+
+    <div class="question">
+      <p>3. Vrai ou Faux : Le salsifi appartient à la famille des astéracées.</p>
+      <input type="radio" name="q3" value="correct"> Vrai<br>
+      <input type="radio" name="q3" value="incorrect"> Faux<br>
+    </div>
+
+    <!-- Nouvelle question 1 -->
+    <div class="question">
+      <p>4. Comment est souvent cuisiné le salsifi ?</p>
+      <input type="radio" name="q4" value="correct"> En gratin<br>
+      <input type="radio" name="q4" value="incorrect"> Frit<br>
+      <input type="radio" name="q4" value="incorrect"> En purée<br>
+      <input type="radio" name="q4" value="incorrect"> En soupe<br>
+    </div>
+
+    <!-- Nouvelle question 2 -->
+    <div class="question">
+      <p>5. Le salsifi est originaire de quelle région du monde ?</p>
+      <input type="radio" name="q5" value="incorrect"> Amérique du Sud<br>
+      <input type="radio" name="q5" value="correct"> Méditerranée<br>
+      <input type="radio" name="q5" value="incorrect"> Afrique<br>
+      <input type="radio" name="q5" value="incorrect"> Asie centrale<br>
+    </div>
+
+    <button onclick="checkAnswers()">Voir les résultats</button>
+
+    <p id="result"></p>
+
+    <div id="success-link">
+      <a href="https://sites.google.com/view/comon-fr/salsifisecretfinak" target="_blank">Accédez à la prochaine étape</a>
+    </div>
+  </div>
+
+  <script>
+    function checkAnswers() {
+      let correct = 0;
+      const questions = document.querySelectorAll('.question');
+
+      questions.forEach((question) => {
+        const answer = question.querySelector('input[type="radio"]:checked');
+        if (answer && answer.value === "correct") {
+          correct++;
+        }
+      });
+
+      const totalQuestions = questions.length;
+      if (correct === totalQuestions) {
+        document.getElementById('result').innerHTML = `Bravo ! Vous avez répondu correctement à toutes les questions (${correct}/${totalQuestions}). Vous pouvez accéder à la prochaine étape !`;
+        document.getElementById('success-link').style.display = 'block'; // Affiche le lien vers la prochaine étape
+      } else {
+        document.getElementById('result').innerHTML = `Vous avez ${correct} bonnes réponses sur ${totalQuestions}. Réessayez pour accéder à la prochaine étape.`;
+        document.getElementById('success-link').style.display = 'none'; // Cache le lien si les réponses ne sont pas toutes correctes
+      }
+    }
+  </script>
+
+</body>
+</html>
